@@ -1,0 +1,16 @@
+[package]
+name = "client"
+version = "0.1.0"
+authors = ["buckn <nathanieljbuck7@gmail.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+macroquad = { git = "https://github.com/not-fl3/macroquad" }
+tokio = { version = "0.2.4", features = ["full"] }
+common = { path = "../common/" }
+rustls = { version = "0.17", features = ["dangerous_configuration"] }
+hecs = "0.3.1"
+quinn = "0.6.1"
+webpki = "0.21"
