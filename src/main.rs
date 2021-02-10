@@ -4,25 +4,26 @@ mod cam;
 
 mod menu;
 
-use common::inv::item::player_spawn::PlayerSpawn;
+mod state;
+
+use crate::cam::player_cam;
+use crate::cam::update_player_cam;
+use crate::state::CurrentScreen;
+use crate::state::GlobalState;
 use common::inv::item::knife::Knife;
-use common::inv::item::ItemType;
-use common::game::*;
-use common::inv::*;
-use common::player::Player;
-use common::systems::control::Cntrl;
-use common::systems::*;
-use common::*;
+use common::map::player_spawn::PlayerSpawn;
+use common::player::*;
+use common::sys::control::Cntrl;
+use common::sys::*;
 use hecs::*;
 use macroquad::prelude::*;
-use net::*;
 use std::{sync::mpsc, thread};
 
 #[macroquad::main("FFA")]
 async fn main() {
     let mut world = World::new();
 
-    let (sender, reciever) = mpsc::channel();
+    let (sender, _reciever) = mpsc::channel();
 
     thread::spawn(|| net::start(sender));
 
@@ -30,29 +31,23 @@ async fn main() {
         current_screen: CurrentScreen::GAME,
         fps_counter: true,
         camera: cam::default_cam(),
-        current_game: GameInfo::default_sandbox(),
+        my_player: ecs_spawn_default(&mut world),
     };
 
-    //make player spawn
+    PlayerSpawn::ecs_spawn_default(&mut world);
 
-    world.spawn((common::inv::item::Item::default(ItemType::PLAYERSPAWN(PlayerSpawn::default())), common::module::Mod::blank()));
+    Knife::ecs_spawn_default(&mut world);
 
-    //spawn player
-    world.spawn((
-        state.current_game.my_player,
-        Player::new(&mut state.current_game.player_ct),
-        Inv::new(10),
-    ));
-
-    //spawn test item
-    world.spawn((common::inv::item::Item::default(ItemType::KNIFE(Knife::default())), common::module::Mod::blank()));
+    state.camera = player_cam(&world, state.my_player);
 
     loop {
         clear_background(WHITE);
 
-        systems(&mut world, Cntrl::new(), &state.current_game.my_player);
+        systems(&mut world, Cntrl::new(), state.my_player.id());
 
         state.fps_counter();
+
+        //update_player_cam(&world, state.my_player, &mut state.camera);
 
         set_camera(state.camera);
 
