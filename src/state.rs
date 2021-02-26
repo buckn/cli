@@ -1,3 +1,5 @@
+use macroquad::prelude::screen_width;
+use macroquad::prelude::screen_height;
 use hecs::Entity;
 use macroquad::prelude::draw_text;
 use macroquad::prelude::get_fps;
@@ -24,11 +26,12 @@ impl GlobalState {
         if self.fps_counter {
             draw_text(
                 &("fps: ".to_owned() + get_fps().to_string().as_str()),
-                self.camera.target.x,
-                self.camera.target.y,
-                24.0,
+                self.camera.target.x - screen_width() / 10.0,
+                self.camera.target.y - screen_height() / 10.0,
+                self.camera.zoom.y * 24.0,
                 Color::new(0.0, 0.0, 0.0, 255.0),
             );
         }
+        println!("pt: {:?}", self.camera.zoom.y * 24.0);
     }
 }

@@ -13,6 +13,7 @@ use crate::state::GlobalState;
 use common::inv::item::knife::Knife;
 use common::map::player_spawn::PlayerSpawn;
 use common::player::*;
+use common::pos::Pos;
 use common::sys::control::Cntrl;
 use common::sys::*;
 use hecs::*;
@@ -43,7 +44,14 @@ async fn main() {
     loop {
         clear_background(WHITE);
 
-        systems(&mut world, Cntrl::new(), state.my_player.id());
+        systems(
+            &mut world,
+            Cntrl::new(),
+            state.my_player.id(),
+            Pos::mouse_pos(&state.camera),
+        );
+
+        update_player_cam(&world, state.my_player, &mut state.camera);
 
         state.fps_counter();
 
