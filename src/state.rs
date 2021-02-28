@@ -32,6 +32,5 @@ impl GlobalState {
                 Color::new(0.0, 0.0, 0.0, 255.0),
             );
         }
-        println!("pt: {:?}", self.camera.zoom.y * 24.0);
     }
 }
