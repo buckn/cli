@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 macroquad = { git = "https://github.com/not-fl3/macroquad" }
 tokio = { version = "0.2.4", features = ["full"] }
-common = { path = "../common/" }
+common = { path = "../ffa_common/" }
 rustls = { version = "0.17", features = ["dangerous_configuration"] }
 hecs = "0.3.1"
 quinn = "0.6.1"
